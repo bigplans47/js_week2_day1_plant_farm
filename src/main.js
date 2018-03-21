@@ -86,16 +86,13 @@ $(document).ready(function() {
     let city = $('#location2').val();
     $('location2').val('');
     let request = new XMLHttpRequest();
-    let url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${myAPIKey}&units=imperial`
-
+    let url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=e53984fe138f468582129bb1286abf8d&units=imperial`
     function getElements(response) {
       $('.showHumidity2').text(`The humidity in ${city} is ${response.main.humidity}%`);
     }
-
     // getElements = function() {
     //   $('.showHumidity2').text(`The humidity in ${city} is ${response.main.humidity}%`);
     // }
-
     request.onreadystatechange = function() {
       if (this.readyState === 4 && this.status === 200) {
         let response = JSON.parse(this.responseText);
@@ -103,11 +100,24 @@ $(document).ready(function() {
         getElements(response);
       }
     }
-
     request.open("GET", url, true);
     request.send();
-    // getElements(response);
+  });
 
+  $('#weatherLocation3').click(function() {
+    let city = $('#location3').val();
+    $('#location3').val('');
+    // $.get(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=e53984fe138f468582129bb1286abf8d`).then(function(response) {
+    //   $('.showHumidity').text(`The humidity in ${city} is ${response.main.humidity}%`);
+    //   $('.showTemp').text(`The temperature in Kelvins is ${response.main.temp} degrees.`);
+    // }).fail(function(error) {
+    //   $('.showErrors').text(`There was an error processing your request: ${error.responseText}. Please try again.`);
+    // });
+    $.get(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=e53984fe138f468582129bb1286abf8d`).then(function(response){
+      $('.showHumidity').text(`The humidity in ${city} is ${response.main.humidity}%`);
+    }).fail(function(error) {
+      $('.showErrors').text(`There was an error processing your request: ${error.responseText}. Please try again.`);
+    });
   });
 
 });
