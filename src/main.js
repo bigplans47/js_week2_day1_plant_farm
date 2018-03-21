@@ -107,17 +107,38 @@ $(document).ready(function() {
   $('#weatherLocation3').click(function() {
     let city = $('#location3').val();
     $('#location3').val('');
-    // $.get(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=e53984fe138f468582129bb1286abf8d`).then(function(response) {
-    //   $('.showHumidity').text(`The humidity in ${city} is ${response.main.humidity}%`);
-    //   $('.showTemp').text(`The temperature in Kelvins is ${response.main.temp} degrees.`);
-    // }).fail(function(error) {
-    //   $('.showErrors').text(`There was an error processing your request: ${error.responseText}. Please try again.`);
-    // });
     $.get(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=e53984fe138f468582129bb1286abf8d`).then(function(response){
       $('.showHumidity').text(`The humidity in ${city} is ${response.main.humidity}%`);
     }).fail(function(error) {
       $('.showErrors').text(`There was an error processing your request: ${error.responseText}. Please try again.`);
     });
+  });
+
+  $('#weatherLocation4').click(function() {
+    let city = $('#location4').val();
+    $('#location').val('');
+
+    let promise = new Promise(function(resolve, reject) {
+      let request = new XMLHttpRequest();
+      let url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=e53984fe138f468582129bb1286abf8d`;
+      request.onload = function() {
+        if (this.status ===200 ) {
+          resolve(request.response);
+        } else {
+          reject(Error(request.statusText));
+        }
+      }
+      request.open("GET", url, true);
+      request.send();
+    });
+    promise.then(function(response) {
+      let body = null;
+      body = JSON.parse(response);
+      $('.showHumidity').text(`The humidity in ${city} is ${body.main.humidity}`);
+      $('.showTemp').text(`temp is ${body.main.temp}`);
+    }), function(error) {
+      $('.showErrors').text(`There was an error ${error.message}`)
+    }
   });
 
 });
